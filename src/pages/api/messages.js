@@ -1,39 +1,42 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import data from './data.json'
+import data from './data.json';
+import _ from 'lodash';
 
 export default function handler(req, res) {
-  const { pn, ps } = req.query;
 
-  if (!Number.isInteger(Number(pn)) || !Number.isInteger(Number(ps))) {
-    res.status(400).json({ error: '页码和每页大小必须为有效数字' });
-    return;
+  const params = JSON.parse(req.body)
+  const { currentPage, pageSize } = params;
+
+  let error = null;
+
+  if (!Number.isInteger(currentPage) || !Number.isInteger(pageSize)) {
+    error = '页码和每页大小必须为有效数字';
   }
 
-  const current = Number(pn);
-  const page_size = Number(ps);
-
-  if(current <= 0 || page_size <= 0) {
-    res.status(400).json({ error: 'pn或ps不能小于0' });
+  if (currentPage <= 0 || pageSize <= 0) {
+    error = '页码和每页大小不能小于0';
   }
 
-  const startIndex = (current - 1) * page_size;
-  const endIndex = Math.min(startIndex + page_size, data.length);
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = Math.min(startIndex + pageSize, _.size(data));
 
   if (startIndex >= data.length) {
-    res.status(400).json({ error: '页码超出范围' });
-    return;
+    error = '页码超出范围'
   }
 
-  const pageData = data.slice(startIndex, endIndex);
+  const pageData = error ? [] : data.slice(startIndex, endIndex);
+
+  const hasNext = endIndex < _.size(data)
 
   const result = {
-    error: null,
-    current: current,
-    requested_size: page_size,
-    actual_size: pageData.length,
-    total: data.length,
-    has_next: endIndex < data.length,
-    data: pageData,
+    error,
+    currentPage,
+    pageSize,
+    actualSize: _.size(pageData),
+    total: _.size(data),
+    hasNext,
+    nextPage: hasNext ? currentPage + 1 : null,
+    listData: pageData,
   };
 
   res.status(200).json(result);

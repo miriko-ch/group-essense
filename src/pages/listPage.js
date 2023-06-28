@@ -1,7 +1,6 @@
-import MesaageList from "@/components/qqLikeComponents/messageList";
-
+import MesaageList from "@/components/messageList"
 const ListPage = () => {
-    return <MesaageList />
+    return <div className="listPage"><MesaageList /></div>
 }
 
 export default ListPage

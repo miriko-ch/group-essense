@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+const withLess = require("next-with-less")
 const nextConfig = {
   reactStrictMode: true,
   images: {
@@ -19,4 +20,4 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
+module.exports = withLess(nextConfig)

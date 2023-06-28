@@ -1,4 +1,4 @@
-import styles from '@/styles/Card.module.css';
+import styles from '@/styles/css/Card.module.css';
 import Image from 'next/image';
 import dayjs from 'dayjs';
 import _ from 'lodash';

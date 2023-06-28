@@ -1,33 +1,54 @@
 import _ from "lodash"
-import { useMount } from "ahooks"
-import { useState } from 'react'
-import messageAPI from "@/pages/api/messageAPI"
+import { useMount, useInfiniteScroll } from "ahooks"
+import InfiniteScroll from 'react-infinite-scroll-component'
+import useListData from "@/hooks/useListData"
 import MessageItem from "./messageItem"
-import { List, Skeleton } from "antd"
+import { List, Skeleton, Divider } from "antd"
+import { useRef, useState } from "react"
 
 const list = () => {
 
-    const [list, setList] = useState([])
+    const [currentPage, setCurrentPage] = useState(1)
+    const [pageSize, setPageSize] = useState(10)
 
-    const fetchList = async () => {
-        const res = await fetch(messageAPI)
-        const posts = await res.json()
-        return posts
+    const [listData, , pagination, getList] = useListData()
+    const refreshList = () => getList({ currentPage, pageSize })
+    useMount(refreshList)
+
+    const { hasNext } = pagination
+    const refreshNextPage = () => {
+        if (!hasNext) return;
+        setCurrentPage(currentPage + 1)
+        refreshList()
     }
-    useMount(async () => {
-        const messageList = await fetchList()
-        const transedKeysList = messageList?.map(item => {
-            const newItem = _.mapKeys(item, (value, key) => _.camelCase(key))
-            const { msgContent } = newItem
-            const newMsgContent = msgContent?.map(content => _.mapKeys(content, (value, key) => _.camelCase(key)))
-            return { ...newItem, msgContent: newMsgContent }
-        })
-        console.log(transedKeysList);
-        setList(transedKeysList)
-    })
 
-    return list.map((message, index) => (_.toString(message)))
+    const ref = useRef(null)
+    const { data, loading, loadMore, loadingMore, noMore } = useInfiniteScroll(
+        refreshNextPage,
+        { target: ref, isNoMore: !hasNext }
+    )
 
+    const infiniteScrollWrapper = listComponent => <InfiniteScroll
+        dataLength={_.size(listData)}
+        next={refreshNextPage}
+        hasMore={hasNext}
+        height={'80vh'}
+        loader={<Skeleton active avatar><MessageItem /></Skeleton>}
+        endMessage={<Divider plain>到底了</Divider>}
+        scrollableTarget='list'
+    >
+        {listComponent}
+    </InfiniteScroll>
+
+    const renderItem = (item) => <MessageItem item={item} />
+
+    const messageList = <List
+        dataSource={listData}
+        itemLayout="vertical"
+        bordered
+        renderItem={renderItem}
+    />
+    return <div className="list">{infiniteScrollWrapper(messageList)}</div>
 
 }
 export default list
