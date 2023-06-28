@@ -45,7 +45,6 @@ const list = () => {
     const messageList = <List
         dataSource={listData}
         itemLayout="vertical"
-        bordered
         renderItem={renderItem}
     />
     return <div className="list">{infiniteScrollWrapper(messageList)}</div>

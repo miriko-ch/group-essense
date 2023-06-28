@@ -22,7 +22,7 @@ const MessageItem = (props) => {
         const { text, imageUrl, imageThumbnailUrl } = content
         const displayContent = {
             1: text,
-            3: <Image height={300} key={imageUrl} src={imageUrl} placeholder={<Image preview={false} src={imageThumbnailUrl} />} />
+            3: <Image height='15vh' key={imageUrl} src={imageUrl} placeholder={<Image preview={false} src={imageThumbnailUrl} />} />
         }
         return displayContent[msgType] || ''
     }
@@ -30,7 +30,7 @@ const MessageItem = (props) => {
 
     const { addDigestNick, addDigestTime } = message
     const addedBy = `${dayjs.unix(addDigestTime).format('YYYY年M月D日 HH:mm')} 由 ${addDigestNick} 设置`
-    const itemWrapper = component => <Item actions={[addedBy]}>{component}</Item>
+    const itemWrapper = component => <Item className='item' actions={[addedBy]}>{component}</Item>
 
     return itemWrapper(<>{sender}{content}</>)
 }
