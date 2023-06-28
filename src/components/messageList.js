@@ -33,7 +33,7 @@ const list = () => {
         next={refreshNextPage}
         hasMore={hasNext}
         height={'80vh'}
-        loader={<Skeleton active avatar><MessageItem /></Skeleton>}
+        loader={<Skeleton className="item" active avatar><MessageItem /></Skeleton>}
         endMessage={<Divider plain>到底了</Divider>}
         scrollableTarget='list'
     >
