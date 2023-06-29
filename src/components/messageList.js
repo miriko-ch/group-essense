@@ -40,7 +40,7 @@ const list = () => {
         {listComponent}
     </InfiniteScroll>
 
-    const renderItem = (item) => <MessageItem item={item} />
+    const renderItem = (item) => <MessageItem item={item} key={item._id} />
 
     const messageList = <List
         dataSource={listData}

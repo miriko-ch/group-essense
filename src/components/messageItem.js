@@ -9,10 +9,9 @@ const MessageItem = (props) => {
     const { msgContent } = message
 
 
-    const { senderUin, senderNick, senderTime } = message
-    const getAvatarSrc = id => `https://q.qlogo.cn/g?b=qq&nk=${id}&s=100`
+    const { senderAvatar, senderNick, senderTime } = message
     const sender = <Meta
-        avatar={<Avatar src={getAvatarSrc(senderUin)} />}
+        avatar={<Avatar src={senderAvatar} />}
         title={<div className='senderName'>{senderNick}</div>}
         description={dayjs.unix(senderTime).format('YYYY年M月D日 HH:mm')}
     />

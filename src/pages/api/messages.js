@@ -37,13 +37,17 @@ export default async function handler(req, res) {
   const sort = { sender_time: -1 };
   const limit = pageSize;
   const skip = (currentPage - 1) * pageSize;
+  const projection = {
+    msg_seq: 0,
+    sender_uin: 0
+  } // exclude these 2 fields from result
 
   if (skip >= size) {
     error = '页码超出范围'
   }
 
   if (error === null) {
-    pageData = await collection.find(query).sort(sort).limit(limit).skip(skip).toArray();
+    pageData = await collection.find(query).project(projection).sort(sort).limit(limit).skip(skip).toArray();
   }
 
   const hasNext = skip + limit < size;
