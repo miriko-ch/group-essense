@@ -1,13 +1,26 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import data from './data.json';
+
 import _ from 'lodash';
+import clientPromise from '../../libs/mongodb';
 
-export default function handler(req, res) {
+let cachedDb = null;
 
+async function connectToDatabase() {
+  if(cachedDb) {
+    return cachedDb;
+  }
+  const client = await clientPromise;
+  const db = await client.db('digests');
+  cachedDb = db;
+  return db;
+}
+
+export default async function handler(req, res) {
   const params = JSON.parse(req.body)
   const { currentPage, pageSize } = params;
 
   let error = null;
+  let pageData = null;
 
   if (!Number.isInteger(currentPage) || !Number.isInteger(pageSize)) {
     error = '页码和每页大小必须为有效数字';
@@ -16,24 +29,31 @@ export default function handler(req, res) {
   if (currentPage <= 0 || pageSize <= 0) {
     error = '页码和每页大小不能小于0';
   }
+  
+  const db = await connectToDatabase();
+  const collection = await db.collection('digests');
+  const size = await collection.countDocuments();
+  const query = {};
+  const sort = { sender_time: -1 };
+  const limit = pageSize;
+  const skip = (currentPage - 1) * pageSize;
 
-  const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = Math.min(startIndex + pageSize, _.size(data));
-
-  if (startIndex >= data.length) {
+  if (skip >= size) {
     error = '页码超出范围'
   }
 
-  const pageData = error ? [] : data.slice(startIndex, endIndex);
+  if (error === null) {
+    pageData = await collection.find(query).sort(sort).limit(limit).skip(skip).toArray();
+  }
 
-  const hasNext = endIndex < _.size(data)
+  const hasNext = skip + limit < size;
 
   const result = {
     error,
     currentPage,
     pageSize,
     actualSize: _.size(pageData),
-    total: _.size(data),
+    total: size,
     hasNext,
     nextPage: hasNext ? currentPage + 1 : null,
     listData: pageData,
