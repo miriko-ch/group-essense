@@ -27,7 +27,7 @@ const MessageItem = (props) => {
 
     const itemWrapper = component => <Card className='messageItem'>{component}</Card>
 
-    return itemWrapper(<>{sender}<Divider />{content}<Divider /></>)
+    return itemWrapper(<>{sender}<Divider />{content}</>)
 }
 
 export default MessageItem
