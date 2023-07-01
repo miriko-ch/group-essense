@@ -1,7 +1,7 @@
 import _ from "lodash"
 import { useInfiniteScroll } from "ahooks"
 import useListData from "@/hooks/useListData"
-import { Timeline, Spin, Empty } from "antd"
+import { Timeline, Spin, Empty, FloatButton } from "antd"
 import LabelItem from "./labelItem"
 import MessageItem from "./messageItem"
 import { useRef } from "react"
@@ -24,6 +24,7 @@ const list = () => {
     const timeLineItemList = list?.map(renderTimelineItem)
 
     return <div ref={ref} className='list' >
+        <FloatButton.BackTop target={() => ref?.current} />
         <Timeline mode="alternate" items={timeLineItemList} />
         <div className="status">
             {(loading || loadingMore) && <Spin size='large' />}
