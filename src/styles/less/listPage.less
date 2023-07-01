@@ -31,9 +31,12 @@
     .list {
         flex-grow: 9;
         width: 100vw;
-        padding: 20px 10px 20px 10px;
         overflow-y: scroll;
         overflow-x: hidden;
+
+        .ant-timeline-item {
+            margin: 0px 10px;
+        }
 
         .ant-timeline-item-left {
             .ant-timeline-item-content {
@@ -52,11 +55,5 @@
             justify-content: center;
         }
 
-    }
-
-    @media (min-width: 768px) {
-        .list {
-            padding: 20px 10px 20px 24px;
-        }
     }
 }
