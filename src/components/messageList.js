@@ -1,53 +1,35 @@
 import _ from "lodash"
-import { useMount, useInfiniteScroll } from "ahooks"
-import InfiniteScroll from 'react-infinite-scroll-component'
+import { useInfiniteScroll } from "ahooks"
 import useListData from "@/hooks/useListData"
+import { Timeline, Spin } from "antd"
+import LabelItem from "./labelItem"
 import MessageItem from "./messageItem"
-import { List, Skeleton, Divider } from "antd"
-import { useRef, useState } from "react"
+import { useRef } from "react"
 
 const list = () => {
 
-    const [currentPage, setCurrentPage] = useState(1)
-    const [pageSize, setPageSize] = useState(10)
-
-    const [listData, , pagination, getList] = useListData()
-    const refreshList = () => getList({ currentPage, pageSize })
-    useMount(refreshList)
-
-    const { hasNext } = pagination
-    const refreshNextPage = () => {
-        if (!hasNext) return;
-        setCurrentPage(currentPage + 1)
-        refreshList()
-    }
+    const [getList] = useListData()
 
     const ref = useRef(null)
     const { data, loading, loadMore, loadingMore, noMore } = useInfiniteScroll(
-        refreshNextPage,
-        { target: ref, isNoMore: !hasNext }
+        d => getList(d?.nextPage, 10),
+        { target: ref, isNoMore: d => d?.hasNext === false }
     )
 
-    const infiniteScrollWrapper = listComponent => <InfiniteScroll
-        dataLength={_.size(listData)}
-        next={refreshNextPage}
-        hasMore={hasNext}
-        height={'80vh'}
-        loader={<Skeleton className="item" active avatar><MessageItem /></Skeleton>}
-        endMessage={<Divider plain>到底了</Divider>}
-        scrollableTarget='list'
-    >
-        {listComponent}
-    </InfiniteScroll>
+    const renderLabelItem = item => <LabelItem item={item} key={item.id} />
+    const renderMessageItem = (item) => <MessageItem item={item} key={item.id} />
+    const renderTimelineItem = item => ({ label: renderLabelItem(item), children: renderMessageItem(item), })
 
-    const renderItem = (item) => <MessageItem item={item} key={item._id} />
+    const list = _.get(data, 'list', [])
+    const timeLineItemList = list?.map(renderTimelineItem)
 
-    const messageList = <List
-        dataSource={listData}
-        itemLayout="vertical"
-        renderItem={renderItem}
-    />
-    return <div className="list">{infiniteScrollWrapper(messageList)}</div>
+    return <div ref={ref} className='list' >
+        <Timeline mode="alternate" items={timeLineItemList} />
+        <div className="status">
+            {(loading || loadingMore) && <Spin size='large' />}
+            {noMore && <span>No more data</span>}
+        </div>
+    </div>
 
 }
 export default list

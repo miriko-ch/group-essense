@@ -5,10 +5,6 @@ import messageAPI from '@/pages/api/messageAPI'
 
 const useListData = (props) => {
 
-    const [list, setList] = useState([])
-    const [pagination, setPagination] = useSetState({ hasNext: true })
-    const [loading, setLoading] = useState(true)
-
     const fetchList = async (payload) => {
         const res = await fetch(
             messageAPI,
@@ -34,21 +30,18 @@ const useListData = (props) => {
         return transedKeysList
     }
 
-    const getListData = async (payload) => {
-        setLoading(true)
-        const data = await fetchList(payload)
+    const getListData = async (currentPage, pageSize) => {
+        if (currentPage === undefined) currentPage = 1
+        const data = await fetchList({ currentPage, pageSize })
 
         const { listData: messageList } = data
         const transedKeysList = transformList(messageList)
 
         const newPagination = _.omit(data, 'listData')
-        const newList = _.isEqual(newPagination, pagination) ? list : _.concat(list, transedKeysList)
-        setList(newList)
-        setPagination(newPagination)
 
-        setLoading(false)
+        return { list: transedKeysList, ...newPagination }
     }
 
-    return [list, loading, pagination, getListData]
+    return [getListData]
 }
 export default useListData

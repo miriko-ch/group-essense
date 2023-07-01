@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
-import { List, Avatar, Image } from "antd";
-const { Item } = List
-const { Meta } = Item
+import { Card, Avatar, Image, Divider } from "antd";
+const { Meta } = Card
 
 const MessageItem = (props) => {
     const { item: message } = props
@@ -9,11 +8,10 @@ const MessageItem = (props) => {
     const { msgContent } = message
 
 
-    const { senderAvatar, senderNick, senderTime } = message
+    const { senderAvatar, senderNick } = message
     const sender = <Meta
         avatar={<Avatar src={senderAvatar} />}
-        title={<div className='senderName'>{senderNick}</div>}
-        description={dayjs.unix(senderTime).format('YYYY年M月D日 HH:mm')}
+        description={senderNick}
     />
 
     const contentRender = (content, index) => {
@@ -25,13 +23,11 @@ const MessageItem = (props) => {
         }
         return displayContent[msgType] || ''
     }
-    const content = <>{msgContent.map(contentRender)}</>
+    const content = <>{msgContent?.map(contentRender)}</>
 
-    const { addDigestNick, addDigestTime } = message
-    const addedBy = `${dayjs.unix(addDigestTime).format('YYYY年M月D日 HH:mm')} 由 ${addDigestNick} 设置`
-    const itemWrapper = component => <Item className='item' actions={[addedBy]}>{component}</Item>
+    const itemWrapper = component => <Card className='messageItem'>{component}</Card>
 
-    return itemWrapper(<>{sender}{content}</>)
+    return itemWrapper(<>{sender}<Divider />{content}<Divider /></>)
 }
 
 export default MessageItem
