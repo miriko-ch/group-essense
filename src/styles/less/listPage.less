@@ -40,8 +40,18 @@
         }
 
         .ant-timeline-item-left {
+            .ant-timeline-item-label {
+                width: calc(30% - 12px);
+            }
+
+            .ant-timeline-item-tail,
+            .ant-timeline-item-head {
+                inset-inline-start: 30%;
+            }
+
             .ant-timeline-item-content {
-                inset-inline-start: calc(50% - 12px);
+                inset-inline-start: calc(30% - 12px);
+                width: calc(70% - 8px);
             }
         }
 

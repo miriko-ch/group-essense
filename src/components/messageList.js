@@ -25,7 +25,7 @@ const list = () => {
 
     return <div ref={ref} className='list' >
         <FloatButton.BackTop target={() => ref?.current} />
-        <Timeline mode="alternate" items={timeLineItemList} />
+        <Timeline mode="left" items={timeLineItemList} />
         <div className="status">
             {(loading || loadingMore) && <Spin size='large' />}
             {noMore && <Empty description={false} />}
