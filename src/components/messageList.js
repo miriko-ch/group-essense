@@ -1,7 +1,7 @@
 import _ from "lodash"
 import { useInfiniteScroll } from "ahooks"
 import useListData from "@/hooks/useListData"
-import { Timeline, Spin } from "antd"
+import { Timeline, Spin, Empty } from "antd"
 import LabelItem from "./labelItem"
 import MessageItem from "./messageItem"
 import { useRef } from "react"
@@ -27,7 +27,7 @@ const list = () => {
         <Timeline mode="alternate" items={timeLineItemList} />
         <div className="status">
             {(loading || loadingMore) && <Spin size='large' />}
-            {noMore && <span>No more data</span>}
+            {noMore && <Empty description={false} />}
         </div>
     </div>
 
