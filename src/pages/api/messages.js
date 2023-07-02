@@ -6,7 +6,7 @@ import clientPromise from '../../libs/mongodb';
 let cachedDb = null;
 
 async function connectToDatabase() {
-  if(cachedDb) {
+  if (cachedDb) {
     return cachedDb;
   }
   const client = await clientPromise;
@@ -17,10 +17,11 @@ async function connectToDatabase() {
 
 export default async function handler(req, res) {
   const params = JSON.parse(req.body)
-  const { currentPage, pageSize } = params;
+  const { currentPage, pageSize, startDate, endDate } = params;
 
   let error = null;
-  let pageData = null;
+  let pageData = [];
+  const monthlyMessagesCount = {} //按月统计本月有多少条发言 {2022-1:300,2022-2:300}
 
   if (!Number.isInteger(currentPage) || !Number.isInteger(pageSize)) {
     error = '页码和每页大小必须为有效数字';
@@ -29,7 +30,7 @@ export default async function handler(req, res) {
   if (currentPage <= 0 || pageSize <= 0) {
     error = '页码和每页大小不能小于0';
   }
-  
+
   const db = await connectToDatabase();
   const collection = await db.collection('digests');
   const size = await collection.countDocuments();
