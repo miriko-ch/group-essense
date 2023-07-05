@@ -19,7 +19,7 @@ const EssenceMessageCard = ({ essenceMessage }) => {
     <div className={styles.senderInfo}>
       <div className={styles.sender}>{senderNick}</div>
       <div className={styles.senderTime}>
-        {dayjs.unix(senderTime).format('YYYY年M月D日 HH:mm')}
+        {dayjs(senderTime).format('YYYY年M月D日 HH:mm')}
         发送
       </div>
     </div>
@@ -46,7 +46,7 @@ const EssenceMessageCard = ({ essenceMessage }) => {
   const { addDigestNick, addDigestTime } = message
   const foot = <div className={styles.footer}>
     <p className={styles.digestInfo}>
-      <span className={styles.digest}>{dayjs.unix(addDigestTime).format('YYYY年M月D日 HH:mm')} 由 {addDigestNick} 设置</span>
+      <span className={styles.digest}>{dayjs(addDigestTime).format('YYYY年M月D日 HH:mm')} 由 {addDigestNick} 设置</span>
     </p>
   </div>
 
