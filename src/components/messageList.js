@@ -23,7 +23,7 @@ const list = () => {
     const list = _.get(data, 'list', [])
     const timeLineItemList = list?.map(renderTimelineItem)
 
-    return <div ref={ref} className='list' >
+    return <div ref={ref} className='timelineList' >
         <FloatButton.BackTop target={() => ref?.current} />
         <Timeline mode="left" items={timeLineItemList} />
         <div className="status">

@@ -44,7 +44,11 @@ const handler = async (req, res) => {
   const params = JSON.parse(req.body)
 
   const [error, data = []] = await to(queryData(params))
-  const result = { error: error?.message || null, data }
+  const result = {
+    error: error?.message || null,
+    listData: data,
+    ...params
+  }
 
   res.setHeader('Cache-Control', 's-maxage=28800'); //8h
   res.status(200).json(result);
