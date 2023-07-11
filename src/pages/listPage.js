@@ -1,4 +1,4 @@
-import MesaageList from "@/components/messageList"
+import MessageList from "@/components/messageList"
 import Image from 'next/image'
 import { Divider } from 'antd';
 const ListPage = () => {
@@ -13,11 +13,11 @@ const ListPage = () => {
   />
   const poweredBy = <div className="poweredBy">
     <a href="https://vercel.com/?utm_source=miriko-ch&utm_campaign=oss"
-       target="_blank"
-       rel="noopener noreferrer">{vercelLogo}</a>
+      target="_blank"
+      rel="noopener noreferrer">{vercelLogo}</a>
   </div>
   const header = <div className="header">{title}{poweredBy}</div>
-  const content = <MesaageList />
+  const content = <MessageList />
 
   return <div className="listPage">
     {header}
