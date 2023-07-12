@@ -1,4 +1,5 @@
 import { Card, Avatar, Image, Divider, Typography, Modal } from "antd";
+import { CloseOutlined } from "@ant-design/icons"
 import { useState } from 'react';
 const { Meta } = Card
 const { Paragraph } = Typography
@@ -46,7 +47,13 @@ const MessageItem = (props) => {
     const detailStyle = { height: '50vh', overflowY: 'auto' }
     const content = <div style={detailStyle}>{msgContent?.map(getRender('detail'))}</div>
     const detail = <Card bordered={false}>{sender}<Divider />{content}</Card>
-    const modal = <Modal centered open={open} onCancel={e => setModalOpen(false)} footer={null} >{detail}</Modal>
+    const modalProps = {
+        closeIcon: false,
+        centered: true,
+        onCancel: () => setModalOpen(false),
+        footer: [<CloseOutlined onClick={() => setModalOpen(false)} />]
+    }
+    const modal = <Modal open={open} {...modalProps}>{detail}</Modal>
 
 
     return <Card className='messageItem'>{modal}{preview}</Card>
