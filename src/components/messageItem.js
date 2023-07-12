@@ -43,7 +43,7 @@ const MessageItem = (props) => {
     const preview = <>{previewSender}<Divider />{previewContent}</>
 
     const sender = <Meta avatar={avatar} description={senderNick}></Meta>
-    const detailStyle = { height: '60vh', overflowY: 'auto' }
+    const detailStyle = { height: '50vh', overflowY: 'auto' }
     const content = <div style={detailStyle}>{msgContent?.map(getRender('detail'))}</div>
     const detail = <Card bordered={false}>{sender}<Divider />{content}</Card>
     const modal = <Modal centered open={open} onCancel={e => setModalOpen(false)} footer={null} >{detail}</Modal>
