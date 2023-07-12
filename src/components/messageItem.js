@@ -37,11 +37,11 @@ const MessageItem = (props) => {
     const previewSender = <Meta avatar={avatar} description={previewSenderNick} />
     const previewProps = {
         onClick: () => setModalOpen(true),
-        style: { height: 70 },
-        ellipsis: { rows: 3 }
+        style: { height: 90 },
+        ellipsis: { rows: 4 }
     }
     const previewContent = <Paragraph {...previewProps}>{msgContent?.map(getRender('preview'))}</Paragraph>
-    const preview = <>{previewSender}<Divider />{previewContent}</>
+    const preview = <>{previewSender}<Divider plain />{previewContent}</>
 
     const sender = <Meta avatar={avatar} description={senderNick}></Meta>
     const detailStyle = { height: '50vh', overflowY: 'auto' }
@@ -56,7 +56,7 @@ const MessageItem = (props) => {
     const modal = <Modal open={open} {...modalProps}>{detail}</Modal>
 
 
-    return <Card className='messageItem'>{modal}{preview}</Card>
+    return <Card className='messageItem' bodyStyle={{ padding: 16 }}>{modal}{preview}</Card>
 
 }
 
