@@ -1,40 +1,39 @@
-
 .timelineList {
-    flex-grow: 9;
-    width: 100vw;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    padding: 10px 0px;
+  flex-grow: 9;
+  width: 100vw;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 10px 0px;
 
-    .ant-timeline-item {
-      margin: 0px 10px;
-    }
-
-    .ant-timeline-item-left {
-      .ant-timeline-item-label {
-        width: calc(30% - 12px);
-      }
-
-      .ant-timeline-item-tail,
-      .ant-timeline-item-head {
-        inset-inline-start: 30%;
-      }
-
-      .ant-timeline-item-content {
-        inset-inline-start: calc(30% - 12px);
-        width: calc(70% - 12px);
-      }
-    }
-
-    .ant-timeline-item-right {
-      .ant-timeline-item-content {
-        text-align: unset !important;
-      }
-    }
-
-    .status {
-      display: flex;
-      justify-content: center;
-    }
-
+  .ant-timeline-item {
+    margin: 0px 10px;
   }
+
+  .ant-timeline-item-left {
+    .ant-timeline-item-label {
+      width: calc(30% - 12px);
+    }
+
+    .ant-timeline-item-tail,
+    .ant-timeline-item-head {
+      inset-inline-start: 30%;
+    }
+
+    .ant-timeline-item-content {
+      inset-inline-start: calc(30% - 12px);
+      width: calc(70% - 12px);
+    }
+  }
+
+  .ant-timeline-item-right {
+    .ant-timeline-item-content {
+      text-align: unset !important;
+    }
+  }
+
+  .status {
+    display: flex;
+    justify-content: center;
+  }
+
+}
