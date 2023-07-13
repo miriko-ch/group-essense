@@ -51,13 +51,12 @@ const MessageItem = (props) => {
         closeIcon: false,
         centered: true,
         onCancel: () => setModalOpen(false),
-        footer: [<CloseOutlined onClick={() => setModalOpen(false)} />]
+        footer: [<CloseOutlined key='closeOutlined' onClick={() => setModalOpen(false)} />]
     }
     const modal = <Modal open={open} {...modalProps}>{detail}</Modal>
 
 
     return <Card className='messageItem' bodyStyle={{ padding: 16 }}>{modal}{preview}</Card>
-
 }
 
 export default MessageItem
