@@ -1,12 +1,12 @@
 import _ from "lodash"
-import { Skeleton } from "antd"
+import { Skeleton, Slider } from "antd"
 import { useSetState } from "ahooks"
 import useSlicedList from "@/hooks/useSlicedList"
 import useMonthlyCount from "@/hooks/useMonthlyCount"
 import { FixedSizeList as List } from "react-window";
 import InfiniteLoader from "react-window-infinite-loader";
 import AutoSizer from "react-virtualized-auto-sizer";
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import MessageItem from "./messageItem"
 
 
@@ -15,6 +15,7 @@ const list = () => {
     const [getListData] = useSlicedList()
     const [itemMap, setItemsMap] = useSetState({})
     const [countList] = useMonthlyCount()
+    const [currentItem, setCurrentItem] = useState(0)
 
     const loadMoreItems = _.debounce(async (startIndex, stopIndex) => {
         const { list } = await getListData(startIndex, stopIndex + 1)
@@ -28,7 +29,7 @@ const list = () => {
     const renderItem = ({ index, style }) => {
         const item = itemMap[index]
         const card = <MessageItem item={item} style={style} />
-        const placeholder = <Skeleton ><MessageItem /> </Skeleton>
+        const placeholder = <Skeleton active avatar><MessageItem /> </Skeleton>
         return <div style={style}>
             {item ? card : placeholder}
         </div>
@@ -37,30 +38,23 @@ const list = () => {
     const infiniteLoaderRef = useRef(null);
 
     const listRef = useRef(null);
-    const renderList = (props) => {
-        const { onItemsRendered, ref, height, width } = props
-        return <>
-            <List
-                className='virtualList'
-                itemSize={220}
-                height={height}
-                width={width}
-                itemCount={countList?.total || 0}
-                onItemsRendered={onItemsRendered}
-                ref={listRef}
-            >
-                {renderItem}
-            </List>
-        </>
+    const jumpTo = (number) => {
+        setCurrentItem(number)
+        listRef?.current?.scrollToItem(number)
     }
-    const autoSizeWrappedList = (props) => <div className="timeJumpList">
-        <AutoSizer>
-            {(size) => renderList({ ...size, ...props })}
-        </AutoSizer>
-    </div>
+    const renderList = (props) => <List
+        {...props}
+        itemSize={220}
+        itemCount={countList?.total || 0}
+        ref={listRef}>
+        {renderItem}
+    </List>
 
+    const autoSizeWrappedList = (props) => <AutoSizer>
+        {(size) => renderList({ ...size, ...props })}
+    </AutoSizer>
 
-    return <InfiniteLoader
+    const infiniteLoadList = <InfiniteLoader
         ref={infiniteLoaderRef}
         isItemLoaded={isItemLoaded}
         itemCount={countList?.total}
@@ -68,6 +62,27 @@ const list = () => {
     >
         {autoSizeWrappedList}
     </InfiniteLoader>
+
+    const virtualList = <div className="virtualList">{infiniteLoadList}</div>
+
+    const sliderProps = {
+        vertical: true,
+        reverse: true,
+        marks: countList?.yearlyCountMap,
+        min: 0,
+        max: countList?.total,
+        onChange: jumpTo,
+        value: currentItem,
+    }
+    const formatter = (value) => _(countList?.monthlyIncreaseList).findLast(({ count }) => count <= value)?.month;
+    const slider = <div className="slider"><Slider {...sliderProps} tooltip={{ formatter }} /></div>
+
+
+
+    return <div className="timeJumpList">
+        {virtualList}
+        {slider}
+    </div>
 
 
 }
