@@ -101,7 +101,7 @@ const list = () => {
         destroyOnClose={true}
         closeIcon={false}
         width={'15vw'}
-        maskStyle={{ background: 'transparent' }}
+        maskStyle={{ background: 'rgb(0, 0, 0, 0.3)' }}
         bodyStyle={{ overflow: 'hidden', padding: '24px 0px' }}
         open={sliderVisible}
         footer={<ArrowRightOutlined key='closeOutlined' onClick={closeDrawer} />}
