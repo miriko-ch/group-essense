@@ -92,9 +92,8 @@ const list = () => {
     const formatter = (value) => _(countList?.monthlyIncreaseList).findLast(({ count }) => count <= value)?.month;
     const slider = <Slider {...sliderProps} tooltip={{ formatter }} />
 
-    const onOpenDrwer = () => {
-        setSliderVisible(true)
-    }
+    const onOpenDrwer = () => setSliderVisible(true)
+    const closeDrawer = () => setSliderVisible(false)
     const drawer = <Drawer
         destroyOnClose={true}
         closeIcon={false}
@@ -102,8 +101,8 @@ const list = () => {
         maskStyle={{ background: 'transparent' }}
         bodyStyle={{ overflow: 'hidden', padding: '24px 0px' }}
         open={sliderVisible}
-        footer={<ArrowRightOutlined key='closeOutlined' onClick={() => setSliderVisible(false)} />}
-        onClose={e => setSliderVisible(false)}>
+        footer={<ArrowRightOutlined key='closeOutlined' onClick={closeDrawer} />}
+        onClose={closeDrawer}>
         {slider}
     </Drawer>
 

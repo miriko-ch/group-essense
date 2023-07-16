@@ -3,6 +3,7 @@ import { VerticalTimelineElement } from 'react-vertical-timeline-component';
 import { Card, Avatar, Image, Divider, Typography, Modal } from "antd";
 import { CloseOutlined } from "@ant-design/icons"
 import { useState } from 'react';
+import useRenderContent from '@/hooks/useRenderContent'
 const { Meta } = Card
 const { Paragraph, Text } = Typography
 
@@ -14,21 +15,8 @@ const MessageItem = (props) => {
     const { senderAvatar } = message
     const avatar = <Avatar size={'large'} src={senderAvatar} />
 
-    const render = type => (content, index) => {
-        const { msgType } = content
-        const { text, imageUrl, imageThumbnailUrl } = content
-        const commonImageProps = {
-            key: imageUrl,
-            src: imageUrl,
-            placeholder: <Image preview={false} src={imageThumbnailUrl} />
-        }
-        const displayContent = {
-            1: text,
-            3: <Image preview={type == 'detail'} {...commonImageProps} />
-        }
-        return displayContent[msgType] || ''
-    }
-    const getRender = (type) => render(type)
+
+    const getRender = useRenderContent()
 
     const { msgContent } = message
 
