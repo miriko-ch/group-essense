@@ -1,8 +1,9 @@
 import _ from "lodash"
 import { VerticalTimeline } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
-import { Skeleton, Slider } from "antd"
-import { useSetState, useDebounceEffect, useDebounce } from "ahooks"
+import { Skeleton, Slider, FloatButton, Drawer } from "antd"
+import { FieldTimeOutlined } from "@ant-design/icons"
+import { useSetState, useDebounceEffect } from "ahooks"
 import useSlicedList from "@/hooks/useSlicedList"
 import useMonthlyCount from "@/hooks/useMonthlyCount"
 import { FixedSizeList as List } from "react-window";
@@ -25,6 +26,8 @@ const list = () => {
         const range = _.range(startIndex, stopIndex + 1)
         setCurrentLoadRange(range)
         if (!_.includes(range, currentItem)) { setCurrentItem(startIndex) }
+        const isLoaded = _.every(range, index => itemMap[index])
+        if (isLoaded) return
 
         const { list } = await getListData(startIndex, stopIndex + 1)
         const mapIndexToItem = _.mapKeys(list, (value, key) => (Number(key) + startIndex))
@@ -32,7 +35,7 @@ const list = () => {
         return { items: list }
     }, 500)
 
-    const isItemLoaded = index => !_.isEmpty(itemMap[index])
+    const isItemLoaded = index => false
 
     const renderItem = ({ index, style }) => {
         const item = itemMap[index]
@@ -72,11 +75,12 @@ const list = () => {
         {autoSizeWrappedList}
     </InfiniteLoader>
 
-    const virtualList = <VerticalTimeline className="virtualList" animate={false}>
+    const virtualList = <VerticalTimeline className="virtualList" animate={false} layout='1-column-left'>
         {infiniteLoadList}
     </VerticalTimeline>
 
     const sliderProps = {
+        className: 'slider',
         vertical: true,
         reverse: true,
         marks: countList?.yearlyCountMap,
@@ -86,13 +90,28 @@ const list = () => {
         value: currentItem,
     }
     const formatter = (value) => _(countList?.monthlyIncreaseList).findLast(({ count }) => count <= value)?.month;
-    const slider = <div className="slider"><Slider {...sliderProps} tooltip={{ formatter }} /></div>
+    const slider = <Slider {...sliderProps} tooltip={{ formatter }} />
+
+    const onOpenDrwer = () => {
+        setSliderVisible(true)
+    }
+    const drawer = <Drawer
+        destroyOnClose={true}
+        closeIcon={false}
+        width={'15vw'}
+        maskStyle={{ background: 'transparent' }}
+        bodyStyle={{ overflow: 'hidden', padding: '24px 0px' }}
+        open={sliderVisible}
+        onClose={e => setSliderVisible(false)}>
+        {slider}
+    </Drawer>
 
 
 
     return <div className="timeJumpList">
         {virtualList}
-        {slider}
+        {drawer}
+        <FloatButton onClick={onOpenDrwer} icon={<FieldTimeOutlined />} />
     </div>
 
 

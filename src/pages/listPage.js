@@ -1,4 +1,5 @@
 import MessageList from "@/components/messageList"
+import MessageTimeJumpList from "@/components/messageTimeJumpList"
 import Image from 'next/image'
 import { Divider } from 'antd';
 const ListPage = () => {
@@ -17,7 +18,7 @@ const ListPage = () => {
       rel="noopener noreferrer">{vercelLogo}</a>
   </div>
   const header = <div className="header">{title}{poweredBy}</div>
-  const content = <MessageList />
+  const content = <MessageTimeJumpList />
 
   return <div className="listPage">
     {header}

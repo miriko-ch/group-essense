@@ -36,12 +36,11 @@ const MessageItem = (props) => {
     const { senderTime } = message
     const sendAt = `${dayjs(senderTime).format('YYYY年M月D日 HH:mm:ss')}`
 
-    const previewSenderNick = <Paragraph ellipsis={{ rows: 1, tooltip: true }}>{senderNick}</Paragraph>
-    const previewSender = <h3 className="vertical-timeline-element-title">{previewSenderNick}</h3>
+    const previewSender = <Paragraph style={{ color: 'wheat' }} ellipsis={{ rows: 1 }}>{senderNick}</Paragraph>
     const previewProps = {
         onClick: () => setModalOpen(true),
-        style: { height: 90 },
-        ellipsis: { rows: 4 }
+        style: { height: 90, color: 'white' },
+        ellipsis: { rows: 4 },
     }
     const previewContent = <Paragraph {...previewProps}>{msgContent?.map(getRender('preview'))}</Paragraph>
     const preview = <>{previewSender}{previewContent}</>
@@ -64,8 +63,8 @@ const MessageItem = (props) => {
 
     return <VerticalTimelineElement
         className='messageItem'
-        contentStyle={{ background: 'rgb(33, 150, 243)', color: '#fff', marginRight: '10px' }}
-        contentArrowStyle={{ borderRight: '7px solid  rgb(33, 150, 243)' }}
+        contentStyle={{ background: 'grey', marginRight: '10px' }}
+        contentArrowStyle={{ borderRight: '7px solid grey' }}
         date={sendAt}
         style={style}
         icon={avatar}>
