@@ -1,4 +1,6 @@
 import _ from "lodash"
+import { VerticalTimeline } from 'react-vertical-timeline-component';
+import 'react-vertical-timeline-component/style.min.css';
 import { Skeleton, Slider } from "antd"
 import { useSetState, useDebounceEffect, useDebounce } from "ahooks"
 import useSlicedList from "@/hooks/useSlicedList"
@@ -7,12 +9,13 @@ import { FixedSizeList as List } from "react-window";
 import InfiniteLoader from "react-window-infinite-loader";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { useRef, useState } from "react"
-import MessageItem from "./messageItem"
+import TimelineItem from "./timelineItem";
 
 
 const list = () => {
 
     const [getListData] = useSlicedList()
+    const [sliderVisible, setSliderVisible] = useState(false)
     const [itemMap, setItemsMap] = useSetState({})
     const [countList] = useMonthlyCount()
     const [currentItem, setCurrentItem] = useState(0)
@@ -22,8 +25,6 @@ const list = () => {
         const range = _.range(startIndex, stopIndex + 1)
         setCurrentLoadRange(range)
         if (!_.includes(range, currentItem)) { setCurrentItem(startIndex) }
-        const isLoaded = _.every(range, index => itemMap[index])
-        if (isLoaded) return
 
         const { list } = await getListData(startIndex, stopIndex + 1)
         const mapIndexToItem = _.mapKeys(list, (value, key) => (Number(key) + startIndex))
@@ -31,15 +32,14 @@ const list = () => {
         return { items: list }
     }, 500)
 
-    const isItemLoaded = index => false//!_.isEmpty(itemMap[index])
+    const isItemLoaded = index => !_.isEmpty(itemMap[index])
 
     const renderItem = ({ index, style }) => {
         const item = itemMap[index]
-        const card = <MessageItem item={item} style={style} />
-        const placeholder = <Skeleton active avatar><MessageItem /> </Skeleton>
-        return <div style={style}>
-            {item ? card : placeholder}
-        </div>
+        const card = <TimelineItem item={item} style={style} />
+        const placeholder = <Skeleton style={style} active avatar><TimelineItem /> </Skeleton>
+        return item ? card : placeholder
+
     }
 
     const infiniteLoaderRef = useRef(null);
@@ -72,7 +72,9 @@ const list = () => {
         {autoSizeWrappedList}
     </InfiniteLoader>
 
-    const virtualList = <div className="virtualList">{infiniteLoadList}</div>
+    const virtualList = <VerticalTimeline className="virtualList" animate={false}>
+        {infiniteLoadList}
+    </VerticalTimeline>
 
     const sliderProps = {
         vertical: true,
