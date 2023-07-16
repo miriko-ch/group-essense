@@ -2,7 +2,7 @@ import _ from "lodash"
 import { VerticalTimeline } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import { Skeleton, Slider, FloatButton, Drawer } from "antd"
-import { FieldTimeOutlined } from "@ant-design/icons"
+import { FieldTimeOutlined, ArrowRightOutlined } from "@ant-design/icons"
 import { useSetState, useDebounceEffect } from "ahooks"
 import useSlicedList from "@/hooks/useSlicedList"
 import useMonthlyCount from "@/hooks/useMonthlyCount"
@@ -102,6 +102,7 @@ const list = () => {
         maskStyle={{ background: 'transparent' }}
         bodyStyle={{ overflow: 'hidden', padding: '24px 0px' }}
         open={sliderVisible}
+        footer={<ArrowRightOutlined key='closeOutlined' onClick={() => setSliderVisible(false)} />}
         onClose={e => setSliderVisible(false)}>
         {slider}
     </Drawer>
