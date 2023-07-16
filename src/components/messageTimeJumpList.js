@@ -1,8 +1,8 @@
 import _ from "lodash"
 import { VerticalTimeline } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
-import { Skeleton, Slider, FloatButton, Drawer } from "antd"
-import { FieldTimeOutlined, ArrowRightOutlined } from "@ant-design/icons"
+import { Skeleton, Slider, FloatButton, Drawer, Modal } from "antd"
+import { FieldTimeOutlined, ArrowRightOutlined, CloseOutlined } from "@ant-design/icons"
 import { useSetState, useDebounceEffect } from "ahooks"
 import useSlicedList from "@/hooks/useSlicedList"
 import useMonthlyCount from "@/hooks/useMonthlyCount"
@@ -11,12 +11,15 @@ import InfiniteLoader from "react-window-infinite-loader";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { useRef, useState } from "react"
 import TimelineItem from "./timelineItem";
+import TimelineMessageDetail from "./timelineMessageDetail";
 
 
 const list = () => {
 
     const [getListData] = useSlicedList()
     const [sliderVisible, setSliderVisible] = useState(false)
+    const [modalContent, setModalContent] = useState(false)
+    const modalVisible = !_.isEmpty(modalContent)
     const [itemMap, setItemsMap] = useSetState({})
     const [countList] = useMonthlyCount()
     const [currentItem, setCurrentItem] = useState(0)
@@ -39,7 +42,7 @@ const list = () => {
 
     const renderItem = ({ index, style }) => {
         const item = itemMap[index]
-        const card = <TimelineItem item={item} style={style} />
+        const card = <TimelineItem setModalContent={setModalContent} item={item} style={style} />
         const placeholder = <Skeleton style={style} active avatar><TimelineItem /> </Skeleton>
         return item ? card : placeholder
 
@@ -106,11 +109,22 @@ const list = () => {
         {slider}
     </Drawer>
 
+    const modalProps = {
+        closeIcon: false,
+        centered: true,
+        onCancel: () => setModalContent({}),
+        destroyOnClose: true,
+        footer: [<CloseOutlined key='closeOutlined' onClick={() => setModalContent({})} />]
+    }
+    const detail = <TimelineMessageDetail item={modalContent} />
+    const modal = <Modal open={modalVisible} {...modalProps}>{detail}</Modal>
+
 
 
     return <div className="timeJumpList">
         {virtualList}
         {drawer}
+        {modal}
         <FloatButton onClick={onOpenDrwer} icon={<FieldTimeOutlined />} />
     </div>
 
