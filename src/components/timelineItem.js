@@ -55,6 +55,7 @@ const MessageItem = (props) => {
         closeIcon: false,
         centered: true,
         onCancel: () => setModalOpen(false),
+        destroyOnClose: true,
         footer: [<CloseOutlined key='closeOutlined' onClick={() => setModalOpen(false)} />]
     }
     const modal = <Modal open={open} {...modalProps}>{detail}</Modal>
