@@ -28,7 +28,8 @@ const list = () => {
     const loadMoreItems = _.debounce(async (startIndex, stopIndex) => {
         const range = _.range(startIndex, stopIndex + 1)
         setCurrentLoadRange(range)
-        if (!_.includes(range, currentItem)) { setCurrentItem(startIndex) }
+        console.log(range, currentItem);
+        if (!_.includes(range, currentItem - 1)) { setCurrentItem(startIndex) }
         const isLoaded = _.every(range, index => itemMap[index])
         if (isLoaded) return
 
