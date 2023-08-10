@@ -29,8 +29,11 @@ const useListData = (props) => {
         const monthlyCounts = list
         setMonthlyCountList(monthlyCounts)
 
-        const getYear = ({ month }) => _(month).split('-').first()
         const sumCounts = months => _(months).sumBy('count')
+        const totalCount = sumCounts(monthlyCounts)
+        setTotal(totalCount)
+
+        const getYear = ({ month }) => _(month).split('-').first()
         const yearlyCounts = _(monthlyCounts)
             .groupBy(getYear)
             .mapValues(sumCounts)
@@ -40,12 +43,8 @@ const useListData = (props) => {
             .value()
         setYearlyCountList(yearlyCounts)
 
-        const totalCount = sumCounts(monthlyCounts)
-        setTotal(totalCount)
-
         const increaseListReducer = (result, item) => [...result, { ...item, count: (_.last(result)?.count || 0) + item?.count }]
-        const backToStartIndex = (originList) => ((item) => ({ ...item, count: item.count - _.first(originList)?.count }))
-        const getIncreaseList = (counts) => _(counts).reduce(increaseListReducer, []).map(backToStartIndex(counts))
+        const getIncreaseList = (counts) => _(counts).reduce(increaseListReducer, [])
         const countMapReducer = (result, item) => ({ ...result, [item.count]: (item.month || item.year) })
 
         const monthlyIncreaseList = getIncreaseList(monthlyCounts)

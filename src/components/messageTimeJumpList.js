@@ -28,7 +28,7 @@ const list = () => {
     const loadMoreItems = _.debounce(async (startIndex, stopIndex) => {
         const range = _.range(startIndex, stopIndex + 1)
         setCurrentLoadRange(range)
-        if (!_.includes(range, currentItem)) { setCurrentItem(startIndex) }
+        if (!_.includes(range, currentItem)) { setCurrentItem(stopIndex + 1) }
         const isLoaded = _.every(range, index => itemMap[index])
         if (isLoaded) return
 
@@ -92,7 +92,8 @@ const list = () => {
         onChange: setCurrentItem,
         value: currentItem,
     }
-    const formatter = (value) => _(countList?.monthlyIncreaseList).findLast(({ count }) => count < value)?.month;
+    const formatter = (value) => _(countList?.monthlyIncreaseList).find(({ count }) => count > value)?.month
+
     const slider = <Slider {...sliderProps} tooltip={{ formatter }} />
 
     const onOpenDrwer = () => setSliderVisible(true)
