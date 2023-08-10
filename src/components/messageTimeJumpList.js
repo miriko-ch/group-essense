@@ -92,7 +92,7 @@ const list = () => {
         onChange: setCurrentItem,
         value: currentItem,
     }
-    const formatter = (value) => _(countList?.monthlyIncreaseList).findLast(({ count }) => count <= value)?.month;
+    const formatter = (value) => _(countList?.monthlyIncreaseList).findLast(({ count }) => count < value)?.month;
     const slider = <Slider {...sliderProps} tooltip={{ formatter }} />
 
     const onOpenDrwer = () => setSliderVisible(true)
