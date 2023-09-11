@@ -27,18 +27,17 @@ const EssenceMessageCard = ({ essenceMessage }) => {
 
   const { msgContent } = message
   const contentRender = (content, index) => {
-    const { msg_type: msgType } = content
-    const { text, image_url: imageUrl } = content
+    const { type, text, image_url: imageUrl } = content
     const displayContent = {
-      1: <div className={styles.textContent}>
+      'text': <div className={styles.textContent}>
         <p className={styles.text}>{text}</p>
       </div>,
-      3: <div className={styles.imageContent}>
+      'image': <div className={styles.imageContent}>
         <img alt='' className={styles.image} src={imageUrl} />
       </div>
     }
     return <div className={styles.contentItem} key={index}>
-      {displayContent[msgType] || ''}
+      {displayContent[type] || ''}
     </div>
   }
   const content = <div className={styles.contents}>{msgContent.map(contentRender)}</div>
