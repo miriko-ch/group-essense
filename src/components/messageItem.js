@@ -12,7 +12,7 @@ const MessageItem = (props) => {
     const { senderAvatar } = message
     const avatar = <Avatar src={senderAvatar} />
 
-    const render = type => (content, index) => {
+    const render = displayType => (content, index) => {
         const { type, text, imageUrl, imageThumbnailUrl } = content
         const commonImageProps = {
             key: imageUrl,
@@ -21,7 +21,7 @@ const MessageItem = (props) => {
         }
         const displayContent = {
             'text': text,
-            'image': <Image preview={type == 'detail'} {...commonImageProps} />
+            'image': <Image preview={displayType == 'detail'} {...commonImageProps} />
         }
         return displayContent[type] || ''
     }

@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { Image } from "antd";
 const useRenderContent = (props) => {
 
-    const renderer = type => (content, index) => {
+    const renderer = displayType => (content, index) => {
         const { type, text, imageUrl, imageThumbnailUrl } = content
         const commonImageProps = {
             key: imageUrl,
@@ -11,7 +11,7 @@ const useRenderContent = (props) => {
         }
         const displayContent = {
             'text': text,
-            'image': <Image preview={type == 'detail'} {...commonImageProps} />
+            'image': <Image preview={displayType == 'detail'} {...commonImageProps} />
         }
         return displayContent[type] || ''
     }
